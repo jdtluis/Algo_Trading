@@ -1,0 +1,11 @@
+# Some ignored stuff
+.idea/
+venv
+
+# Temp
+Backtesting/
+Coint_2.py
+Cointegration_strategy.py
+Pairs Trading.py
+SmaCross.html
+System.html
