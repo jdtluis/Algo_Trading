@@ -76,5 +76,5 @@ pyRofex.market_data_subscription(tickers=["InvalidInstrument"],
 time.sleep(5)
 pyRofex.close_websocket_connection()
 
-of = pd.DataFrame.from_dict(list(pd.DataFrame(md)['OF'].apply(lambda x: x[0]).values))
-bi = pd.DataFrame.from_dict(list(pd.DataFrame(md)['BI'].apply(lambda x: x[0]).values))
+of = pd.DataFrame.from_dict(list(pd.DataFrame(md)['OF'].apply(lambda x: x[0])))
+bi = pd.DataFrame.from_dict(list(pd.DataFrame(md)['BI'].apply(lambda x: x[0])))

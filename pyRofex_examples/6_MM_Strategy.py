@@ -19,7 +19,7 @@ class MyStrategy:
         self.buy_size = size
         self.sell_size = size
         self.spread = spread
-        self.tick = 0.01
+        self.tick = 0.05
         self.my_order = dict()
         self.last_md = None
         self.state = States.WAITING_MARKET_DATA
@@ -63,8 +63,10 @@ class MyStrategy:
                 offer_px = offer[0]["price"]
                 bid_offer_spread = round(offer_px - bid_px, 2)
                 if bid_offer_spread >= self.spread:
+                    print(self.my_order)
                     if self.my_order:
-                        sides = {k:v.values()["orderReport"]["side"] for k,v in self.my_order.items()}
+                        print('Orders')
+                        sides = {k:v['orderReport']['side'] for k,v in self.my_order.items()} #v.values()["orderReport"]["side"]
                         print(sides)
                         for order in self.my_order.values():  # we only update if there is previous BID or offer
                             if (order["orderReport"]["side"] == "BUY" and \
@@ -146,4 +148,5 @@ class MyStrategy:
 if __name__ == "__main__":
     config = configparser.SafeConfigParser()
     found_config_file = config.read('config.cfg')
-    MyStrategy(config, "WTI/NOV22", 4, 0.05)
+    MyStrategy(config, "PAMP/DIC22", 5, 20)
+

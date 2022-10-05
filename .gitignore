@@ -9,3 +9,5 @@ Cointegration_strategy.py
 Pairs Trading.py
 SmaCross.html
 System.html
+pyRofex_examples/config.cfg
+Backtesting/stats.xlsx
