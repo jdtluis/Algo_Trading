@@ -3,7 +3,7 @@
 venv
 
 # Temp
-Backtesting/
+temp/
 Coint_2.py
 Cointegration_strategy.py
 Pairs Trading.py
