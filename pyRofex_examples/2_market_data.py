@@ -22,7 +22,7 @@ import pyRofex
 import configparser
 
 config = configparser.SafeConfigParser()
-found_config_file = config.read('config.cfg')
+found_config_file = config.read('pyRofex_examples/config.cfg')
 user = config['pyrofex'].get('user')
 password = config['pyrofex'].get('password')
 account = config['pyrofex'].get('account')
@@ -34,7 +34,7 @@ pyRofex.initialize(user=user,
                    environment=pyRofex.Environment.REMARKET)
 
 # 2-Set the instrument to use
-instrument = "DLR/SEP22"
+instrument = "DLR/NOV22"
 
 # 3-Get the two Best Bids and Best Offers for the instrument (using depth parameter)
 entries = [pyRofex.MarketDataEntry.BIDS, pyRofex.MarketDataEntry.OFFERS, pyRofex.MarketDataEntry.LAST]

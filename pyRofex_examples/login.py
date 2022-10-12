@@ -3,7 +3,7 @@ import requests
 import configparser
 
 config = configparser.SafeConfigParser()
-found_config_file = config.read('pyRofex_examples\config.cfg')
+found_config_file = config.read('config.cfg')
 user = config['pyrofex'].get('user')
 password = config['pyrofex'].get('password')
 
@@ -14,6 +14,9 @@ response = requests.post("https://api.remarkets.primary.com.ar/" + "auth/getToke
                          headers=headers,)
 
 token = response.headers['X-Auth-Token']
+
+
+
 
 
 

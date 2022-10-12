@@ -20,21 +20,29 @@ import time
 
 import pyRofex
 
+import configparser
+
+config = configparser.SafeConfigParser()
+found_config_file = config.read('config.cfg')
+user = config['pyrofex'].get('user')
+password = config['pyrofex'].get('password')
+account = config['pyrofex'].get('account')
+
 # 1-Initialize the environment
-pyRofex.initialize(user="XXXXXXX",
-                   password="XXXXXXX",
-                   account="XXXXXXX",
+pyRofex.initialize(user=user,
+                   password=password,
+                   account=account,
                    environment=pyRofex.Environment.REMARKET)
 
 # 2-Get the best bid offer in the market for DLR/MAR22
-md = pyRofex.get_market_data(ticker="DLR/MAR22",
+md = pyRofex.get_market_data(ticker="DLR/NOV22",
                              entries=[pyRofex.MarketDataEntry.BIDS])
 
 # Print the response
 print("Market Data Response: {0}".format(md))
 
 # 3-Send a Buy Limit Order for DLR/MAR22 with the same price as the best bid
-order = pyRofex.send_order(ticker="DLR/MAR22",
+order = pyRofex.send_order(ticker="DLR/NOV22",
                            side=pyRofex.Side.BUY,
                            size=10,
                            price=md["marketData"]["BI"][0]["price"],

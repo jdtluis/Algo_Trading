@@ -63,11 +63,9 @@ class MyStrategy:
                 offer_px = offer[0]["price"]
                 bid_offer_spread = round(offer_px - bid_px, 2)
                 if bid_offer_spread >= self.spread:
-                    print(self.my_order)
                     if self.my_order:
-                        print('Orders')
-                        sides = {k:v['orderReport']['side'] for k,v in self.my_order.items()} #v.values()["orderReport"]["side"]
-                        print(sides)
+                        sides = {k:v['orderReport']['side'] for k,v in self.my_order.items()}
+                        #print(sides)
                         for order in self.my_order.values():  # we only update if there is previous BID or offer
                             if (order["orderReport"]["side"] == "BUY" and \
                                     order["orderReport"]["price"] < bid_px) or "BUY" not in sides.values():  # if existing mm order is not at TOB, send new order market price plus one tick

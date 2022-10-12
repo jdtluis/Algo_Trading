@@ -18,7 +18,7 @@ import pyRofex
 import configparser
 
 config = configparser.SafeConfigParser()
-found_config_file = config.read('config.cfg')
+found_config_file = config.read('pyRofex_examples/config.cfg')
 user = config['pyrofex'].get('user')
 password = config['pyrofex'].get('password')
 account = config['pyrofex'].get('account')
