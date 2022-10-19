@@ -146,5 +146,5 @@ class MyStrategy:
 if __name__ == "__main__":
     config = configparser.SafeConfigParser()
     found_config_file = config.read('config.cfg')
-    MyStrategy(config, "PAMP/DIC22", 5, 20)
+    MyStrategy(config, "PAMP/DIC22", 10, 3)
 
