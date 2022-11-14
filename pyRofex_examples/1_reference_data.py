@@ -18,7 +18,7 @@ import pyRofex
 import configparser
 
 config = configparser.SafeConfigParser()
-found_config_file = config.read('pyRofex_examples/config.cfg')
+found_config_file = config.read('config.cfg')
 user = config['pyrofex'].get('user')
 password = config['pyrofex'].get('password')
 account = config['pyrofex'].get('account')
@@ -42,3 +42,5 @@ print("Number of Instruments: {0}".format(len(instruments['instruments'])))
 detailed = pyRofex.get_detailed_instruments()
 print("Low Limit Price for {0} is {1}.".format(detailed['instruments'][0]['instrumentId']['symbol'],
                                                detailed['instruments'][0]['lowLimitPrice']))
+
+detal_instruments = pyRofex.get_instrument_details('ORO/NOV22',pyRofex.Market.ROFEX,pyRofex.Environment.REMARKET)

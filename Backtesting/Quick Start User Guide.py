@@ -83,6 +83,7 @@ def SMA(values, n):
 # +
 from backtesting import Strategy
 from backtesting.lib import crossover
+from backtesting.lib import SignalStrategy
 
 
 class SmaCross(Strategy):

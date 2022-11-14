@@ -348,6 +348,5 @@ if __name__ == '__main__':
     auth_client.cancel_all(product_id=product_id) # Make sure there is no existing orders in the market
     stream = TextWebsocketClient(products=[product_id],channels=['ticker'])
     stream.start()
-    time.sleep(120)
-    stream.close()
+
 

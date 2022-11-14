@@ -43,3 +43,4 @@ while True:
     print(msg)
     socket.send_string(msg)
     time.sleep(random.random() * 2)
+

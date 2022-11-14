@@ -1,6 +1,8 @@
 import pyRofex
 import enum
 import configparser
+import pandas as pd
+import time
 
 
 class States(enum.Enum):
@@ -11,24 +13,33 @@ class States(enum.Enum):
 
 class MyStrategy:
 
-    def __init__(self, config, instrument, size, spread):
+    def __init__(self, config, instrument, size, spread, tol):
         # Define variables
         self.instrument = instrument
         self.comision = 0
+        self.tol = tol
         self.initial_size = size
         self.buy_size = size
         self.sell_size = size
         self.spread = spread
-        self.tick = 0.05
         self.my_order = dict()
         self.last_md = None
+        self.md = pd.DataFrame()
         self.state = States.WAITING_MARKET_DATA
+        self.rolling_spread = None
 
         # Initialize the environment
         pyRofex.initialize(user=config['pyrofex'].get('user'),
                            password=config['pyrofex'].get('password'),
                            account=config['pyrofex'].get('account'),
                            environment=pyRofex.Environment.REMARKET)
+
+        detailed = pyRofex.get_detailed_instruments()
+        detail = {self.instrument:d for i, d in enumerate(detailed['instruments']) if d['instrumentId']['symbol'] == self.instrument}
+        self.tick = float(detail[self.instrument]['minPriceIncrement'])
+        self.pricePrecision = int(detail[self.instrument]['instrumentPricePrecision'])
+        self.minPrice = float(detail[self.instrument]['lowLimitPrice'])
+        self.maxPrice = float(detail[self.instrument]['highLimitPrice'])
 
         # Initialize Websocket Connection with the handler
         pyRofex.init_websocket_connection(
@@ -51,33 +62,49 @@ class MyStrategy:
         # Subscribes to receive order report for the default account
         pyRofex.order_report_subscription()
 
+    @staticmethod
+    def md_persistence(message):
+        md = {k: [v[0] if v else {
+            'price': None,
+            'size' : None}] for k, v in message['marketData'].items()}
+        md_reform = {(outerKey, innerKey): values for outerKey, innerDict in md.items() for innerKey, values in
+                  innerDict[0].items()}
+        df_md = pd.DataFrame(md_reform, index=[time.time()])
+        df_md['spread'] = df_md['OF']['price'] - df_md['BI']['price']
+        return df_md
+
     # Defines the handlers that will process the messages.
     def market_data_handler(self, message):
+        self.md = pd.concat([self.md, self.md_persistence(message)])
+        if self.md.__len__() > 5:
+            self.rolling_spread = s.md['spread'].rolling(2).mean().values[-1]
         if self.state is States.WAITING_MARKET_DATA:
             print("Processing Market Data Message Received: {0}".format(message))
             self.last_md = None
             bid = message["marketData"]["BI"]
             offer = message["marketData"]["OF"]
-            if bid and offer:  # check that market spread exist
+            if bid and offer \
+                    and bid[0]["price"] > round(self.minPrice * (1 + self.tol), self.pricePrecision) \
+                    and offer[0]["price"] < round(self.maxPrice * (1 - self.tol), self.pricePrecision):  # check that market spread exist
                 bid_px = bid[0]["price"]
                 offer_px = offer[0]["price"]
-                bid_offer_spread = round(offer_px - bid_px, 2)
-                if bid_offer_spread >= self.spread:
+                bid_offer_spread = round(offer_px - bid_px, self.pricePrecision)
+                if bid_offer_spread >= self.rolling_spread if self.rolling_spread else self.spread:
                     if self.my_order:
                         sides = {k:v['orderReport']['side'] for k,v in self.my_order.items()}
                         #print(sides)
                         for order in self.my_order.values():  # we only update if there is previous BID or offer
                             if (order["orderReport"]["side"] == "BUY" and \
                                     order["orderReport"]["price"] < bid_px) or "BUY" not in sides.values():  # if existing mm order is not at TOB, send new order market price plus one tick
-                                self._send_order(pyRofex.Side.BUY, round(bid_px + self.tick, 2), self.buy_size)
+                                self._send_order(pyRofex.Side.BUY, round(bid_px + self.tick, self.pricePrecision), self.buy_size)
                             elif (order["orderReport"]["side"] == "SELL" and \
                                     order["orderReport"]["price"] > offer_px) or "SELL" not in sides.values():
-                                self._send_order(pyRofex.Side.SELL, round(offer_px - self.tick, 2), self.sell_size)
+                                self._send_order(pyRofex.Side.SELL, round(offer_px - self.tick, self.pricePrecision), self.sell_size)
                     else:  # first orders from algo
                         if self.buy_size > 0:
-                            self._send_order(pyRofex.Side.BUY, round(bid_px + self.tick, 2), self.buy_size)
+                            self._send_order(pyRofex.Side.BUY, round(bid_px + self.tick, self.pricePrecision), self.buy_size)
                         if self.sell_size > 0:
-                            self._send_order(pyRofex.Side.SELL, round(offer_px - self.tick, 2), self.sell_size)
+                            self._send_order(pyRofex.Side.SELL, round(offer_px - self.tick, self.pricePrecision), self.sell_size)
                 else:  # Lower spread
                     self._cancel_if_orders()  # Cancel all
             else: # no bid or offer
@@ -146,5 +173,5 @@ class MyStrategy:
 if __name__ == "__main__":
     config = configparser.SafeConfigParser()
     found_config_file = config.read('config.cfg')
-    MyStrategy(config, "DLR/ENE23", 10, 3)
+    s = MyStrategy(config, "ORO/NOV22", 10, 3, 0.01) #size, min spread tolerance
 
