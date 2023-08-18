@@ -33,7 +33,7 @@ class TextWebsocketClient(cbpro.WebsocketClient):
         if LIVE:
             self.url = 'wss://ws-feed.pro.coinbase.com'
         else:
-            self.url = 'wss://ws-feed.pro.coinbase.com' # 'wss://ws-feed-public.sandbox.pro.coinbase.com'
+            self.url = 'wss://ws-feed.pro.coinbase.com'  # 'wss://ws-feed-public.sandbox.pro.coinbase.com'
       
         self.message_count = 0
         self.initial_date = datetime.datetime.now()
@@ -49,11 +49,11 @@ class TextWebsocketClient(cbpro.WebsocketClient):
         self.message_count += 1
         msg_type = msg.get('type',None)
         if msg_type == 'ticker':
-            time_val =   msg.get('time',('-'*27))
-            price_val =  msg.get('price',None)
-            bid_val =    msg.get('best_bid', None)
-            ask_val =    msg.get('best_ask', None)
-            volume =     msg.get('last_size', None)
+            time_val = msg.get('time', ('-' * 27))
+            price_val = msg.get('price', None)
+            bid_val = msg.get('best_bid', None)
+            ask_val = msg.get('best_ask', None)
+            volume = msg.get('last_size', None)
             
             if price_val is not None:
                 price_val = float(price_val)
@@ -84,7 +84,6 @@ class TextWebsocketClient(cbpro.WebsocketClient):
             # Run the executor
             self.vwap_algo.Execute()
 
-    
     def on_close(self):
         print(f"<---Websocket connection closed--->\n\tTotal messages: {self.message_count}")
 
@@ -185,9 +184,9 @@ class VWAP_Execution_Algorithm():
 
         # total_filled_size, remaining_quantity, order_pct_complete = self.GetRemainingQuantity()
 
-        should_have_executed = np.round(pct_to_complete/100*self.size,decimals=3)
+        should_have_executed = np.round(pct_to_complete/100*self.size, decimals=3)
         executed_so_far = self.QuantityExecuted
-        execution_slice = np.round(should_have_executed - executed_so_far - self.exposed_size,decimals=7) # Need to round this up or you'll get into a sizing issue
+        execution_slice = np.round(should_have_executed - executed_so_far - self.exposed_size, decimals=7) # Need to round this up or you'll get into a sizing issue
 
         # Print some useful execution logs info
         print('------------------------- EXECUTION INFO -------------------------')
@@ -247,7 +246,6 @@ class VWAP_Execution_Algorithm():
             auth_client.cancel_all(product_id=product_id)
             raise ValueError('********************* \n [Order Complete] Current time has now passed the scheduled end time \n *********************')
 
-
     def PriceIsFavorable(self, threshold=3):
         """
         Checks if the price is more favourable than VWAP
@@ -270,7 +268,6 @@ class VWAP_Execution_Algorithm():
                 return False
         else:
             return False
-    
 
     def UpdateFills(self):
         'This function will be used to track all our fills so far'
@@ -297,7 +294,6 @@ class VWAP_Execution_Algorithm():
         # Update the average executed price
         self.AverageExecutedPrice()
 
-
     def CheckOpenOrders(self):
         
         open_orders_array = []
@@ -308,7 +304,6 @@ class VWAP_Execution_Algorithm():
                 open_orders_array.append(o['size'])
         
         self.exposed_size = np.sum(np.asarray(open_orders_array).astype(float))
-
 
     def AverageExecutedPrice(self):
         filled_prices = []
@@ -325,7 +320,6 @@ class VWAP_Execution_Algorithm():
 
         # Calculate AVG executed price so far
         self.average_executed_price = np.sum(filled_prices*filled_size)/np.sum(filled_size)
-
 
     def GetRemainingQuantity(self):
         'Gets the remaining quantity left from the order'
@@ -346,7 +340,5 @@ if __name__ == '__main__':
 
     # ------------------------ MAIN ------------------------ #
     auth_client.cancel_all(product_id=product_id) # Make sure there is no existing orders in the market
-    stream = TextWebsocketClient(products=[product_id],channels=['ticker'])
+    stream = TextWebsocketClient(products=[product_id], channels=['ticker'])
     stream.start()
-
-
