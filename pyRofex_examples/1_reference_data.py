@@ -43,4 +43,4 @@ detailed = pyRofex.get_detailed_instruments()
 print("Low Limit Price for {0} is {1}.".format(detailed['instruments'][0]['instrumentId']['symbol'],
                                                detailed['instruments'][0]['lowLimitPrice']))
 
-detal_instruments = pyRofex.get_instrument_details('ORO/NOV22',pyRofex.Market.ROFEX,pyRofex.Environment.REMARKET)
+detal_instruments = pyRofex.get_instrument_details('ORO/NOV23',pyRofex.Market.ROFEX,pyRofex.Environment.REMARKET)

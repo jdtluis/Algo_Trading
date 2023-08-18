@@ -12,7 +12,7 @@ user = config['pyrofex'].get('user')
 password = config['pyrofex'].get('password')
 account = config['pyrofex'].get('account')
 
-instrument = "WTI/NOV22"
+instrument = "WTI/NOV23"
 
 # Create empty DataFrame to store MarketData
 prices = pd.DataFrame(columns=["Time", "Bid", "Offer", "Last"])

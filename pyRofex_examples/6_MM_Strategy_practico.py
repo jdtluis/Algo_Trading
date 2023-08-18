@@ -91,7 +91,7 @@ class MyStrategy:
                 bid_offer_spread = round(offer_px - bid_px, self.pricePrecision)
                 if bid_offer_spread >= self.rolling_spread if self.rolling_spread else self.spread:
                     if self.my_order:
-                        sides = {k:v['orderReport']['side'] for k,v in self.my_order.items()}
+                        sides = {k:v['orderReport']['side'] for k, v in self.my_order.items()}
                         #print(sides)
                         for order in self.my_order.values():  # we only update if there is previous BID or offer
                             if (order["orderReport"]["side"] == "BUY" and \
@@ -173,5 +173,6 @@ class MyStrategy:
 if __name__ == "__main__":
     config = configparser.SafeConfigParser()
     found_config_file = config.read('config.cfg')
-    s = MyStrategy(config, "ORO/NOV22", 10, 3, 0.01) #size, min spread tolerance
-
+    i = input('Pasar params')
+    e = eval(i)
+    s = MyStrategy(config, "DLR/NOV23", 10, 3, 0.01) #size, min spread tolerance
