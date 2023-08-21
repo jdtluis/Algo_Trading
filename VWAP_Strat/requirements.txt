@@ -1,0 +1,4 @@
+cbpro==1.1.4
+python-dateutil
+numpy==1.24.3
+
