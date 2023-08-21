@@ -35,7 +35,7 @@ pyRofex.initialize(user=user,
                    environment=pyRofex.Environment.REMARKET)
 
 # 2-Get the best bid offer in the market for DLR/MAR22
-md = pyRofex.get_market_data(ticker="DLR/NOV22",
+md = pyRofex.get_market_data(ticker="DLR/NOV23",
                              entries=[pyRofex.MarketDataEntry.BIDS])
 
 # Print the response
