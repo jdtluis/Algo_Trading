@@ -63,7 +63,7 @@ instruments = ["WTI/NOV23", "DLR/DIC23"]  # Instruments list to subscribe
 entries = [pyRofex.MarketDataEntry.BIDS,
            pyRofex.MarketDataEntry.OFFERS,
            pyRofex.MarketDataEntry.LAST]
-
+time.sleep(5)
 pyRofex.market_data_subscription(tickers=instruments,
                                  entries=entries)
 
@@ -73,7 +73,7 @@ pyRofex.market_data_subscription(tickers=["InvalidInstrument"],
 
 
 # Wait 5 sec then close the connection
-time.sleep(5)
+time.sleep(15)
 pyRofex.close_websocket_connection()
 
 try:
