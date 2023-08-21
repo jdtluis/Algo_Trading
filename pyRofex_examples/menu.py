@@ -42,10 +42,10 @@ class Menu:
             choice = input("Enter an option: ")
             script = self.choices.get(choice)
 
-            if script:
+            if isinstance(script, str):
                 #t=threading.Thread(target=subprocess.run,args=(["C:/Users/jljuncos/PycharmProjects/Algo_Trading/venv/Scripts/python",script],))
                 #t.start()
-                subprocess.check_call(["C:/Users/jljuncos/PycharmProjects/Algo_Trading/venv/Scripts/python", script])
+                subprocess.check_call(["python", script])
                 #proc.communicate(timeout=15))
             elif hasattr(script,'__call__'):
                 script()
@@ -54,7 +54,7 @@ class Menu:
 
     def quit(self):
         ''' quit or terminate the program '''
-        print("Thank you for using diarybook today")
+        print("Thank you for using")
         sys.exit(0)
 
 
