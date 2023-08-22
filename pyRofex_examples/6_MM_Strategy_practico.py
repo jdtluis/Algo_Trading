@@ -175,4 +175,14 @@ if __name__ == "__main__":
     found_config_file = config.read('config.cfg')
     i = input('Pasar params')
     e = eval(i)
-    s = MyStrategy(config, "DLR/NOV23", 10, 3, 0.01) #size, min spread tolerance
+    #s = MyStrategy(config, "DLR/NOV23", 10, 3, 0.01) #size, min spread tolerance
+    error = True
+    while error:
+        try:
+            i = input('Error en los parametros:') #  Format ("WTI/NOV23",10,.5,0.01,)
+            e = eval(i)
+            s = MyStrategy(config, e[0], e[1], e[2], e[3])
+            error = False
+        except Exception as ex:
+            print(ex)
+
