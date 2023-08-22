@@ -1,5 +1,6 @@
 import pyRofex
-
+import sys
+import signal
 import pandas as pd
 from datetime import datetime
 import matplotlib.pyplot as plt
@@ -29,7 +30,7 @@ pyRofex.initialize(user=user,
                    environment=pyRofex.Environment.REMARKET)
 
 
-def update_plot():
+def update_plot(kill=False):
     global ax, prices, count
     if len(prices.index) > count:
         count = len(prices.index)
@@ -43,7 +44,9 @@ def update_plot():
         ax.grid(True, linestyle='--')
         plt.tight_layout()
         plt.draw()
-        plt.pause(0.2)
+        #plt.pause(0.2)
+        if kill:
+            plt.close(all)
 
 
 # Defines the handlers that will process the messages
@@ -56,6 +59,7 @@ def market_data_handler(message):
         message["marketData"]["OF"][0]["price"],
         last
     ]
+    update_plot()
 
 
 # Initialize Websocket Connection with the handlers
@@ -71,6 +75,17 @@ pyRofex.market_data_subscription(
         pyRofex.MarketDataEntry.LAST]
 )
 
+# while True:
+#     update_plot()
+#     time.sleep(0.5)
+
+
+def signal_handler(sig, frame):
+    update_plot(True)
+    sys.exit(0)
+
+
+signal.signal(signal.SIGINT, signal_handler)
+
 while True:
-    update_plot()
-    time.sleep(0.5)
+    time.sleep(5)
