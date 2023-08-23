@@ -1,0 +1,6 @@
+numpy
+pandas==1.2.0
+quantrocket-client==2.8.0.0
+yfinance
+matplotlib==3.5.1
+plotly
