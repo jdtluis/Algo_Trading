@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 import time
 import configparser
 
+
 config = configparser.SafeConfigParser()
 found_config_file = config.read('config.cfg')
 user = config['pyrofex'].get('user')
@@ -44,14 +45,14 @@ def update_plot(kill=False):
         ax.grid(True, linestyle='--')
         plt.tight_layout()
         plt.draw()
-        #plt.pause(0.2)
+        plt.pause(0.2)
         if kill:
             plt.close(all)
 
 
 # Defines the handlers that will process the messages
 def market_data_handler(message):
-    global prices
+    global prices, fig
     print("Market Data Message Received: {0}".format(message))
     last = None if not message["marketData"]["LA"] else message["marketData"]["LA"]["price"]
     prices.loc[datetime.fromtimestamp(message["timestamp"]/1000)] = [
@@ -59,7 +60,7 @@ def market_data_handler(message):
         message["marketData"]["OF"][0]["price"],
         last
     ]
-    update_plot()
+    #update_plot()
 
 
 # Initialize Websocket Connection with the handlers
@@ -87,5 +88,7 @@ def signal_handler(sig, frame):
 
 signal.signal(signal.SIGINT, signal_handler)
 
+
 while True:
-    time.sleep(5)
+    update_plot()
+    time.sleep(2)

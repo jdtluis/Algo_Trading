@@ -42,7 +42,7 @@ md = pyRofex.get_market_data(ticker="DLR/NOV23",
 print("Market Data Response: {0}".format(md))
 
 # 3-Send a Buy Limit Order for DLR/MAR22 with the same price as the best bid
-order = pyRofex.send_order(ticker="DLR/NOV22",
+order = pyRofex.send_order(ticker="DLR/NOV23",
                            side=pyRofex.Side.BUY,
                            size=10,
                            price=md["marketData"]["BI"][0]["price"],

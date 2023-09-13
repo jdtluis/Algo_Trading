@@ -91,7 +91,7 @@ class MyStrategy:
                 bid_offer_spread = round(offer_px - bid_px, self.pricePrecision)
                 if bid_offer_spread >= self.rolling_spread if self.rolling_spread else self.spread:
                     if self.my_order:
-                        sides = {k:v['orderReport']['side'] for k, v in self.my_order.items()}
+                        sides = {k: v['orderReport']['side'] for k, v in self.my_order.items()}
                         #print(sides)
                         for order in self.my_order.values():  # we only update if there is previous BID or offer
                             if (order["orderReport"]["side"] == "BUY" and \

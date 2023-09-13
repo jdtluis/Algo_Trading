@@ -73,7 +73,7 @@ pyRofex.market_data_subscription(tickers=["InvalidInstrument"],
 
 
 # Wait 5 sec then close the connection
-time.sleep(15)
+time.sleep(30)
 pyRofex.close_websocket_connection()
 
 try:
